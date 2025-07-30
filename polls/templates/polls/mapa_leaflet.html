@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <title>Mapa</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 400px; width: 100%; }
+  </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Mapa</h1>
+        <div class="links">
+            <a href="{% url 'polls:index' %}">Inicio</a>
+            <a href="{% url 'polls:agregar_pregunta' %}">Agregar nueva pregunta</a>
+        </div>
+    </div>
+  
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([19.4326, -99.1332], 13); // CDMX por defecto
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([19.4326, -99.1332]).addTo(map)
+      .bindPopup('Ciudad de México')
+      .openPopup();
+  </script>
+</body>
+</html>

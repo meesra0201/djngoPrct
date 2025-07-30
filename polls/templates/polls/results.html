@@ -5,7 +5,15 @@
     <title>My test page</title>
 </head>
 <body>
-    <h1>{{ question.question_text }}</h1>
+    <div class="header">
+        <h1>{{ question.question_text }}</h1>
+        <div class="links">
+            <a href="{% url 'polls:index' %}">Inicio</a>
+            <a href="{% url 'polls:agregar_pregunta' %}">Agregar nueva pregunta</a>
+            <a href="{% url 'polls:mapa_leaflet' %}">Mapa</a>
+        </div>
+    </div>
+  
     
     <ul>
         {% for choice in question.choice_set.all %}

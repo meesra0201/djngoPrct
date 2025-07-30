@@ -1,10 +1,11 @@
 
 from django.db.models import F
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from .forms import QuestionForm, ChoiceFormSet
 
 from .models import Choice, Question
 
@@ -60,3 +61,22 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+
+def agregar_pregunta(request):
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        formset = ChoiceFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            question = form.save()
+            choices = formset.save(commit=False)
+            for choice in choices:
+                choice.question = question
+                choice.save()
+            return redirect('polls:index')  # Cambia esto por la vista a la que quieras redirigir
+    else:
+        form = QuestionForm()
+        formset = ChoiceFormSet()
+    return render(request, 'polls/add_qstns_chs.html', {'form': form, 'formset': formset})
+
+def mapa_leaflet(request):
+    return render(request, 'polls/mapa_leaflet.html')

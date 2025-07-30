@@ -3,7 +3,7 @@
 <html lang="en-US">
 <head>
   <meta charset="utf-8" />
-  <title>My test page</title>
+  <title>Encuestas</title>
   
   {% load static %}
   
@@ -12,14 +12,27 @@
   
 </head>
 <body>
-  {% if latest_question_list %}
-  <ul>
-    {% for question in latest_question_list %}
-    <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p>No polls are available.</p>
-  {% endif %}
+  <div class="header">
+    <h1>Encuestas simples</h1>
+    <div class="links">
+      <a href="{% url 'polls:agregar_pregunta' %}">Agregar nueva pregunta</a>
+      <a href="{% url 'polls:mapa_leaflet' %}">Mapa</a>
+    </div>
+    
+  </div>
+  
+  <div class="content">
+    <h2>Encuestas agregadas</h2>
+    {% if latest_question_list %}
+    <ul>
+      {% for question in latest_question_list %}
+      <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No polls are available.</p>
+    {% endif %}
+  </div>
+  
 </body>
 </html>

@@ -1,7 +1,7 @@
 li a {
-    color: green;
+    color: rgb(170, 10, 149);
 }
 
-body {
-    background: white url("images/background.png") no-repeat;
+.header {
+    background: rgb(174, 248, 178);
 }

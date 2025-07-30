@@ -1,0 +1,34 @@
+
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <title>Encuestas</title>
+  
+  {% load static %}
+  
+  <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+  
+  
+</head>
+<body>
+    <div class="header">
+        <h1>Agregar pregunta y opciones</h1>
+        <div class="links"></div>
+            <a href="{% url 'polls:index' %}">Inicio</a>
+            <a href="{% url 'polls:mapa_leaflet' %}">Mapa</a>
+
+    </div>
+    
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form.as_p }}
+        {% endfor %}
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>
