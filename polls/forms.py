@@ -9,14 +9,10 @@ class QuestionForm(forms.ModelForm):
         label="Agrega una nueva encuesta",
         widget=forms.TextInput(attrs={'placeholder': 'Escribe la pregunta aquí'})
     )
-    pub_date = forms.DateTimeField(
-        label="Fecha de publicación",
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
-    )
-
+    
     class Meta:
         model = Question
-        fields = ['question_text', 'pub_date']
+        fields = ['question_text']
 
 ChoiceFormSet = inlineformset_factory(
     Question,
