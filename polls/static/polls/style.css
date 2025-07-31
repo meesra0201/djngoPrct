@@ -1,7 +1,31 @@
 li a {
-    color: rgb(170, 10, 149);
-}
+    color: #85ffaa;
 
 .header {
     background: rgb(174, 248, 178);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.encuestas{
+    background: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 0, 0);
+    padding: 10px;
+    margin: 10px;
+}
+
+.boton-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #85ffaa;
+    color: #fff !important;
+    border-radius: 5px;
+    text-decoration: none;
+    margin: 0 5px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.boton-link:hover {
+    background: #85ffaa;
 }

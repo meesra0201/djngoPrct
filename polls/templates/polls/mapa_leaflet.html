@@ -3,31 +3,97 @@
 <head>
   <meta charset="utf-8" />
   <title>Mapa</title>
+  {% load static %}
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="{% static 'polls/style.css' %}">
   <style>
-    #map { height: 400px; width: 100%; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgb(174, 248, 178);
+    }
+    #map {
+      position: absolute;
+      top: 120px; /* Ajusta según la altura de tu header */
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 120px); /* Ajusta según la altura de tu header */
+    }
   </style>
 </head>
 <body>
     <div class="header">
         <h1>Mapa</h1>
         <div class="links">
-            <a href="{% url 'polls:index' %}">Inicio</a>
-            <a href="{% url 'polls:agregar_pregunta' %}">Agregar nueva pregunta</a>
-        </div>
+            <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
+            <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
+            <button id="mostrar-geojson"  class="boton-link">Alcaldias CDMX</button>
+
+        </div> 
     </div>
   
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    var map = L.map('map').setView([19.4326, -99.1332], 13); // CDMX por defecto
+    var map = L.map('map').setView([19.4326, -99.1332], 10); // CDMX por defecto
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
-    L.marker([19.4326, -99.1332]).addTo(map)
-      .bindPopup('Ciudad de México')
-      .openPopup();
+
+    var geojsonLayer = null;
+
+      function onEachFeature(feature, layer) {
+    // Mostrar un atributo en un tooltip al hacer hover
+    if (feature.properties && feature.properties.NOMGEO) {
+      layer.bindTooltip(feature.properties.NOMGEO, {sticky: true});
+    }
+
+    // Mostrar todos los atributos en un popup al hacer clic
+    layer.on('click', function(e) {
+      let props = feature.properties;
+      let content = '<b>Atributos:</b><ul>';
+      for (let key in props) {
+        content += `<li><b>${key}:</b> ${props[key]}</li>`;
+      }
+      content += '</ul>';
+      layer.bindPopup(content).openPopup();
+    });
+  }
+
+  function cargarGeoJSON() {
+    // Evitar cargar dos veces
+    if (geojsonLayer) {
+      map.removeLayer(geojsonLayer);
+      geojsonLayer = null;
+      return;
+    }
+ 
+      // Cargar GeoJSON desde static
+    fetch("{% static 'polls/spatial/munis09_geo.geojson' %}")
+        .then(response => response.json())
+        .then(data => {
+        geojsonLayer = L.geoJSON(data, {
+            onEachFeature: onEachFeature
+        }).addTo(map);
+        });
+  }
+
+  document.getElementById('mostrar-geojson').addEventListener('click', cargarGeoJSON);
+
   </script>
 </body>
 </html>

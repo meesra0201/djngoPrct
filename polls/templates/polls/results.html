@@ -3,14 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <title>My test page</title>
+    {% load static %}  
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 </head>
 <body>
     <div class="header">
         <h1>{{ question.question_text }}</h1>
         <div class="links">
-            <a href="{% url 'polls:index' %}">Inicio</a>
-            <a href="{% url 'polls:agregar_pregunta' %}">Agregar nueva pregunta</a>
-            <a href="{% url 'polls:mapa_leaflet' %}">Mapa</a>
+            <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
+            <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
+            <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
         </div>
     </div>
   
