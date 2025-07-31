@@ -8,10 +8,14 @@
 </head>
 <body>
     <div class="header">
-        <legend><h1>{{ question.question_text }}</h1></legend>
-        <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
-        <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
-        <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>  
+        <div>
+            <legend><h1>{{ question.question_text }}</h1></legend>
+        </div>
+        <div>
+            <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
+            <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
+            <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>  
+        </div>
     </div>           
 
     <form action="{% url 'polls:vote' question.id %}" method="post">
@@ -25,7 +29,7 @@
             <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
             {% endfor %}
         </fieldset>
-        <input type="submit" value="Vota">
+        <input  class="boton-link" type="submit" value="Vota">
     </form>
 </body>
 </html>

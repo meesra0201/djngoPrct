@@ -13,11 +13,14 @@
 </head>
 <body>
     <div class="header">
-        <h1>Agregar pregunta y opciones</h1>
-        <div class="links"></div>
+        <div>
+            <h1>Agregar pregunta y opciones</h1>
+        </div>
+        
+        <div class="links">
             <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
             <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
-
+        </div>
     </div>    
 
 <form method="post">
