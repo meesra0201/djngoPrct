@@ -10,12 +10,12 @@
   
 </head>
 <body>
-  <div class="header">
-    <div>
+  <div>
+    <div class="header">
       <h1>Encuestas simples</h1>
     </div>
     
-    <div class="links">
+    <div class="links header">
       <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
       <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
     </div>
@@ -27,7 +27,12 @@
     {% if latest_question_list %}
     <ul class="encuestas">
       {% for question in latest_question_list %}
-      <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+      <li>
+        <h4 ><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></h4>
+        
+        <a href="{% url 'polls:results' question.id %}" class="boton-link">Ver resultados</a>
+
+      </li>
       {% endfor %}
     </ul>
     {% else %}

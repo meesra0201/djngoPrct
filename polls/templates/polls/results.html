@@ -7,9 +7,12 @@
     <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 </head>
 <body>
-    <div class="header">
-        <h1>{{ question.question_text }}</h1>
-        <div class="links">
+    <div >
+        <div class="header">
+            <h1>{{ question.question_text }}</h1>
+        </div>
+        
+        <div class="links header">
             <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
             <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
             <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
@@ -23,6 +26,6 @@
         {% endfor %}
     </ul>
     
-    <a href="{% url 'polls:detail' question.id %}">Vota otra vez?</a>
+    <a class="links"  href="{% url 'polls:detail' question.id %}">Vota otra vez?</a>
 </body>
 </html>

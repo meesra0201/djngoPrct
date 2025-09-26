@@ -28,5 +28,16 @@ li a {
     transition: background 0.2s;
 }
 .boton-link:hover {
-    background: #85ffaa;
+    background: #ffcc3f;
+}
+
+.encuestas li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.encuestas li h4 {
+    margin: 0;
 }
