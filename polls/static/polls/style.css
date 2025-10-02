@@ -1,12 +1,24 @@
-li a {
+    li {
+    color: #509264;
+}   
+   
+   li a {
     color: #509264;
 }
 
 .header {
-    background: rgb(174, 248, 178);
+    background: rgb(99, 143, 101);
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding: 0 24px;
+    color:  rgb(255, 255, 255);
+}
+
+.headbttns {
+justify-content: center;
+padding: 10px;
+
 }
 
 .encuestas{
@@ -18,8 +30,8 @@ li a {
 
 .boton-link {
     display: inline-block;
-    padding: 8px 16px;
-    background: #85ffff;
+
+    background: #ac4779;
     color: #fff !important;
     border-radius: 5px;
     text-decoration: none;
@@ -34,10 +46,16 @@ li a {
 .encuestas li {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
+    justify-content: left;
+    margin-bottom: 5px;
 }
 
 .encuestas li h4 {
     margin: 0;
 }
+
+.subtitle{
+  color: rgb(99, 143, 101);
+  padding:20px;
+}
+    

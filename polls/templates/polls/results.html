@@ -2,17 +2,22 @@
 <html lang="en-US">
 <head>
     <meta charset="utf-8" />
-    <title>My test page</title>
+    <title>Resultados</title>
+
     {% load static %}  
     <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 </head>
 <body>
     <div >
         <div class="header">
+            <i class="fa-solid fa-square-poll-vertical fa-5x" style="padding: 15px;"></i>
             <h1>{{ question.question_text }}</h1>
+            <i class="fa-solid fa-magnifying-glass fa-5x" style="padding: 15px;"></i>
         </div>
         
-        <div class="links header">
+        <div class="links header headbttns">
             <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
             <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
             <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
@@ -20,12 +25,12 @@
     </div>
   
     
-    <ul>
+    <ul class="encuestas">
         {% for choice in question.choice_set.all %}
-        <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+        <h2><li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li></h2>
         {% endfor %}
     </ul>
     
-    <a class="links"  href="{% url 'polls:detail' question.id %}">Vota otra vez?</a>
+    <a class="links header headbttns boton-link"  href="{% url 'polls:detail' question.id %}">Vota otra vez?</a>
 </body>
 </html>

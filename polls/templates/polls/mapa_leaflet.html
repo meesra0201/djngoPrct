@@ -4,8 +4,11 @@
   <meta charset="utf-8" />
   <title>Mapa</title>
   {% load static %}
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+
   <style>
     html, body {
       height: 100%;
@@ -17,17 +20,9 @@
       width: 100vw;
       overflow: hidden;
     }
-    /*.header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      background: rgb(174, 248, 178);
-    }*/
     #map {
       position: absolute;
-      top: 120px; /* Ajusta según la altura de tu header */
+      top: 175px; /* Ajusta según la altura de tu header */
       left: 0;
       width: 100vw;
       height: calc(100vh - 120px); /* Ajusta según la altura de tu header */
@@ -37,10 +32,12 @@
 <body>
     <div >
         <div class="header">
-            <h1>Mapa</h1>
+          <i class="fa-solid fa-map-location-dot fa-5x" style="padding: 15px;"></i>
+          <h1>Mapa</h1>
+          <i class="fa-solid fa-earth-americas fa-5x" style="padding: 15px;"></i>
         </div>
         
-        <div class="links header">
+        <div class="links header headbttns">
             <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
             <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
             <button id="mostrar-geojson"  class="boton-link">Alcaldias CDMX</button>
@@ -78,8 +75,8 @@
     });
 
     var map = L.map('map', {
-      center: [19.10425, -99.587], // Tenango del valle    19.10425, -99.587, zoom 15
-      zoom: 15,
+      center: [19.320016, -99.147931], // CDMX
+      zoom: 11,
       layers: [osm] // Capa base inicial
     });
 
