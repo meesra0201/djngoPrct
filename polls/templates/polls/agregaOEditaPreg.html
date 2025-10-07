@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <title>Editar Pregunta</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div>
+        <div class="header">
+            <i class="fa-solid fa-pen-to-square fa-5x" style="padding: 15px;"></i>
+            <h1>Agrega o edita pregunta y opciones</h1>
+            <i class="fa-solid fa-clipboard-question fa-5x" style="padding: 15px;"></i>
+        </div>
+        <div class="links header headbttns">
+            <a href="{% url 'polls:inicio' %}" class="boton-link">Inicio</a>
+            <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
+        </div>
+    </div>    
+
+<form method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Pregunta</legend>
+        {{ form.question_text.errors }}
+        {{ form.question_text.label_tag }} {{ form.question_text }}
+    </fieldset>
+    <fieldset>
+        <legend>Opciones</legend>
+        {{ formset.management_form }}
+        <table id="formset-table">
+        {% for choice_form in formset %}
+            <tr>
+                <td>
+                    {{ choice_form.choice_text.errors }}
+                    {{ choice_form.choice_text.label_tag }} {{ choice_form.choice_text }}
+                </td>
+                <td>
+                    {% if formset.can_delete %}
+                        {{ choice_form.DELETE }} 
+                        <button type="button" class="remove-option-btn">Quitar</button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+        <button type="button" id="add-option-btn">Agregar opción</button>
+    </fieldset>
+    <button class="headbttns boton-link" type="submit">Guardar cambios</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addBtn = document.getElementById('add-option-btn');
+    const formsetTable = document.getElementById('formset-table');
+    const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+
+    // Agregar opción
+    addBtn.addEventListener('click', function() {
+        const forms = formsetTable.querySelectorAll('tr');
+        const newFormIdx = forms.length;
+        const emptyForm = forms[0].cloneNode(true);
+
+        // Limpia todos los inputs del form clonado
+        emptyForm.querySelectorAll('input').forEach(function(el) {
+            if (el.type === 'text') el.value = '';
+            if (el.type === 'checkbox') el.checked = false;
+            if (el.name) el.name = el.name.replace(/-\d+-/, '-' + newFormIdx + '-');
+            if (el.id) el.id = el.id.replace(/-\d+-/, '-' + newFormIdx + '-');
+        });
+
+        // Elimina errores si hay
+        const errorList = emptyForm.querySelector('.errorlist');
+        if (errorList) errorList.remove();
+
+        formsetTable.appendChild(emptyForm);
+
+        // Actualiza el total de formularios
+        totalForms.value = formsetTable.querySelectorAll('tr').length;
+        addRemoveListeners(); // Vuelve a agregar listeners
+    });
+
+    // Eliminar opción dinámicamente (ocultar y marcar DELETE)
+    function addRemoveListeners() {
+        formsetTable.querySelectorAll('.remove-option-btn').forEach(function(btn) {
+            btn.onclick = function() {
+                const tr = btn.closest('tr');
+                const delInput = tr.querySelector('input[type="checkbox"]');
+                const textInput = tr.querySelector('input[type="text"]');
+                if (delInput) {
+                    delInput.checked = true;
+                    tr.style.display = 'none';
+                    if (textInput) textInput.value = ''; // Limpia el campo para evitar validación
+                }
+            }
+        });
+    }
+
+    addRemoveListeners();
+});
+</script>
+
+</body>
+</html>

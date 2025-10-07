@@ -19,7 +19,7 @@ ChoiceFormSet = inlineformset_factory(
     Choice,
     fields=['choice_text'],
     extra=3,
-    can_delete=False,
+    can_delete=True,
     widgets={
         'choice_text': forms.TextInput(attrs={'placeholder': 'Opción de respuesta'})
     },

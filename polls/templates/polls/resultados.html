@@ -18,7 +18,7 @@
         </div>
         
         <div class="links header headbttns">
-            <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
+            <a href="{% url 'polls:inicio' %}" class="boton-link">Inicio</a>
             <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
             <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
         </div>
@@ -31,6 +31,6 @@
         {% endfor %}
     </ul>
     
-    <a class="links header headbttns boton-link"  href="{% url 'polls:detail' question.id %}">Vota otra vez?</a>
+    <a class="headbttns boton-link"  href="{% url 'polls:detalle' question.id %}">Vota otra vez?</a>
 </body>
 </html>

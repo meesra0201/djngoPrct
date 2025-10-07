@@ -19,24 +19,26 @@
             
         </div>
         <div class="links header headbttns">
-            <a href="{% url 'polls:index' %}" class="boton-link">Inicio</a>
+            <a href="{% url 'polls:inicio' %}" class="boton-link">Inicio</a>
             <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
             <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>  
         </div>
     </div>           
 
-    <form action="{% url 'polls:vote' question.id %}" method="post">
+    <form action="{% url 'polls:votar' question.id %}" method="post">
         {% csrf_token %}
         <fieldset>
 
     
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
             {% for choice in question.choice_set.all %}
-            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+                <label>
+                    <input type="radio" name="choice" value="{{ choice.id }}">
+                    {{ choice.choice_text }}
+                </label><br>            
             {% endfor %}
         </fieldset>
-        <input  class="boton-link" type="submit" value="Vota">
+        <input  class="headbttns boton-link" type="submit" value="Vota">
     </form>
 </body>
 </html>

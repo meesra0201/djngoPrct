@@ -13,13 +13,13 @@
 <body>
   <div>
     <div class="header">
-      <i class="fa-solid fa-circle-question fa-5x" style="padding: 15px;"></i>
+      <i class="fa-solid fa-circle-question fa-5x" style="margin: 15px;"></i>
       <h1>Bienvenido al sitio de encuestas</h1>
-      <i class="fa-solid fa-circle-question fa-5x" style="padding: 15px;"></i>
+      <i class="fa-solid fa-circle-question fa-5x" style="margin: 15px;"></i>
 
     </div>
     
-    <div class="links header headbttns">
+    <div class="header headbttns">
       <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
       <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
     </div>
@@ -34,9 +34,11 @@
       <h3>Encuestas agregadas:</h3>
       {% for question in latest_question_list %}
       <li>
-        <h2 ><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></h2>
+        <h2 ><a href="{% url 'polls:detalle' question.id %}">{{ question.question_text }}</a></h2>
         
-        <a href="{% url 'polls:results' question.id %}" class="boton-link">Ver resultados</a>
+        <a href="{% url 'polls:resultados' question.id %}" class="boton-link">Ver resultados</a>
+
+        <a href="{% url 'polls:editar_pregunta' question.pk %}" class="boton-link">Editar</a>
 
       </li>
       {% endfor %}

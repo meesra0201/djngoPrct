@@ -11,7 +11,7 @@ from .models import Choice, Question
 
 
 class IndexView(generic.ListView):
-    template_name = "polls/index.html"
+    template_name = "polls/inicio.html"
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
@@ -26,7 +26,7 @@ class IndexView(generic.ListView):
 
 class DetailView(generic.DetailView):
     model = Question
-    template_name = "polls/detail.html"
+    template_name = "polls/detalle.html"
     
     def get_queryset(self):
         """
@@ -37,10 +37,10 @@ class DetailView(generic.DetailView):
 
 class ResultsView(generic.DetailView):
     model = Question
-    template_name = "polls/results.html"
+    template_name = "polls/resultados.html"
 
 
-def vote(request, question_id):
+def votar(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
@@ -48,7 +48,7 @@ def vote(request, question_id):
         # Redisplay the question voting form.
         return render(
             request,
-            "polls/detail.html",
+            "polls/detalle.html",
             {
                 "question": question,
                 "error_message": "No has elegido ninguna opcion!! D-:<",
@@ -60,7 +60,7 @@ def vote(request, question_id):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+        return HttpResponseRedirect(reverse("polls:resultados", args=(question.id,)))
 
 def agregar_pregunta(request):
     if request.method == 'POST':
@@ -72,11 +72,41 @@ def agregar_pregunta(request):
             for choice in choices:
                 choice.question = question
                 choice.save()
-            return redirect('polls:index')  # Cambia esto por la vista a la que quieras redirigir
+            return redirect('polls:inicio')  # Cambia esto por la vista a la que quieras redirigir
     else:
         form = QuestionForm()
         formset = ChoiceFormSet()
-    return render(request, 'polls/add_qstns_chs.html', {'form': form, 'formset': formset})
+    return render(request, 'polls/agregaOEditaPreg.html', {'form': form, 'formset': formset})
+
+def agregar_o_editar_pregunta(request, pk=None):
+    if pk:
+        question = get_object_or_404(Question, pk=pk)
+    else:
+        question = None
+
+    if request.method == 'POST':
+        form = QuestionForm(request.POST, instance=question)
+        formset = ChoiceFormSet(request.POST, instance=question)
+        if form.is_valid() and formset.is_valid():
+            print(form.cleaned_data['question_text'])
+            question = form.save()
+            choices = formset.save(commit=False)
+            # Asigna la pregunta y guarda los nuevos/actualizados
+            for choice in choices:
+                choice.question = question
+                choice.save()
+            # Elimina los marcados para borrar
+            for obj in formset.deleted_objects:
+                obj.delete()
+            return redirect('polls:inicio')
+    else:
+        form = QuestionForm(instance=question)
+        formset = ChoiceFormSet(instance=question)
+    return render(
+        request,
+        'polls/agregaOEditaPreg.html',
+        {'form': form, 'formset': formset, 'editando': pk is not None}
+    )
 
 def mapa_leaflet(request):
     return render(request, 'polls/mapa_leaflet.html')
