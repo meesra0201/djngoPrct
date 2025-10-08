@@ -41,16 +41,16 @@ class ResultsView(generic.DetailView):
 
 
 def votar(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+    pregunta = get_object_or_404(Question, pk=question_id)
     try:
-        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+        selected_choice = pregunta.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
         # Redisplay the question voting form.
         return render(
             request,
             "polls/detalle.html",
             {
-                "question": question,
+                "pregunta": pregunta,
                 "error_message": "No has elegido ninguna opcion!! D-:<",
             },
         )
@@ -60,52 +60,52 @@ def votar(request, question_id):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse("polls:resultados", args=(question.id,)))
+        return HttpResponseRedirect(reverse("polls:resultados", args=(pregunta.id,)))
 
 def agregar_pregunta(request):
     if request.method == 'POST':
-        form = QuestionForm(request.POST)
-        formset = ChoiceFormSet(request.POST)
-        if form.is_valid() and formset.is_valid():
-            question = form.save()
-            choices = formset.save(commit=False)
-            for choice in choices:
-                choice.question = question
-                choice.save()
+        formulario = QuestionForm(request.POST)
+        formularios = ChoiceFormSet(request.POST)
+        if formulario.is_valid() and formularios.is_valid():
+            pregunta = formulario.save()
+            opciones = formularios.save(commit=False)
+            for opcion in opciones:
+                opcion.pregunta = pregunta
+                opcion.save()
             return redirect('polls:inicio')  # Cambia esto por la vista a la que quieras redirigir
     else:
-        form = QuestionForm()
-        formset = ChoiceFormSet()
-    return render(request, 'polls/agregaOEditaPreg.html', {'form': form, 'formset': formset})
+        formulario = QuestionForm()
+        formularios = ChoiceFormSet()
+    return render(request, 'polls/agregaOEditaPreg.html', {'formulario': formulario, 'formularios': formularios})
 
 def agregar_o_editar_pregunta(request, pk=None):
     if pk:
-        question = get_object_or_404(Question, pk=pk)
+        pregunta = get_object_or_404(Question, pk=pk)
     else:
-        question = None
+        pregunta = None
 
     if request.method == 'POST':
-        form = QuestionForm(request.POST, instance=question)
-        formset = ChoiceFormSet(request.POST, instance=question)
-        if form.is_valid() and formset.is_valid():
-            print(form.cleaned_data['question_text'])
-            question = form.save()
-            choices = formset.save(commit=False)
+        formulario = QuestionForm(request.POST, instance=pregunta)
+        formularios = ChoiceFormSet(request.POST, instance=pregunta)
+        if formulario.is_valid() and formularios.is_valid():
+            print(formulario.cleaned_data['question_text'])
+            pregunta = formulario.save()
+            opciones = formularios.save(commit=False)
             # Asigna la pregunta y guarda los nuevos/actualizados
-            for choice in choices:
-                choice.question = question
-                choice.save()
+            for opcion in opciones:
+                opcion.question = pregunta
+                opcion.save()
             # Elimina los marcados para borrar
-            for obj in formset.deleted_objects:
+            for obj in formularios.deleted_objects:
                 obj.delete()
             return redirect('polls:inicio')
     else:
-        form = QuestionForm(instance=question)
-        formset = ChoiceFormSet(instance=question)
+        formulario = QuestionForm(instance=pregunta)
+        formularios = ChoiceFormSet(instance=pregunta)
     return render(
         request,
         'polls/agregaOEditaPreg.html',
-        {'form': form, 'formset': formset, 'editando': pk is not None}
+        {'formulario': formulario, 'formularios': formularios, 'editando': pk is not None}
     )
 
 def mapa_leaflet(request):

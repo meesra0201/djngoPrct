@@ -24,21 +24,21 @@
     {% csrf_token %}
     <fieldset>
         <legend>Pregunta</legend>
-        {{ form.question_text.errors }}
-        {{ form.question_text.label_tag }} {{ form.question_text }}
+        {{ formulario.question_text.errors }}
+        {{ formulario.question_text.label_tag }} {{ formulario.question_text }}
     </fieldset>
     <fieldset>
         <legend>Opciones</legend>
-        {{ formset.management_form }}
+        {{ formularios.management_form }}
         <table id="formset-table">
-        {% for choice_form in formset %}
+        {% for choice_form in formularios %}
             <tr>
                 <td>
                     {{ choice_form.choice_text.errors }}
                     {{ choice_form.choice_text.label_tag }} {{ choice_form.choice_text }}
                 </td>
                 <td>
-                    {% if formset.can_delete %}
+                    {% if formularios.can_delete %}
                         {{ choice_form.DELETE }} 
                         <button type="button" class="remove-option-btn">Quitar</button>
                     {% endif %}
