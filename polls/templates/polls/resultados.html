@@ -13,7 +13,7 @@
     <div >
         <div class="header">
             <i class="fa-solid fa-square-poll-vertical fa-5x" style="padding: 15px;"></i>
-            <h1>{{ question.question_text }}</h1>
+            <h1>{{ pregunta.texto_pregunta }}</h1>
             <i class="fa-solid fa-magnifying-glass fa-5x" style="padding: 15px;"></i>
         </div>
         
@@ -26,11 +26,11 @@
   
     
     <ul class="encuestas">
-        {% for choice in question.choice_set.all %}
-        <h2><li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li></h2>
+        {% for opcion in pregunta.opcion_set.all %}
+        <h2><li>{{ opcion.texto_opcion }}:   {{ opcion.votos }} voto{{ opcion.votos|pluralize }}</li></h2>
         {% endfor %}
     </ul>
     
-    <a class="headbttns boton-link"  href="{% url 'polls:detalle' question.id %}">Vota otra vez?</a>
+    <a class="headbttns boton-link"  href="{% url 'polls:detalle' pregunta.id %}">Vota otra vez?</a>
 </body>
 </html>

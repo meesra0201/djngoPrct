@@ -45,7 +45,15 @@
         </div> 
     </div>
   
-  <div id="map"></div>
+  <div id="map">
+    <div id="controlCapas">
+      <h3>Mapas Base </h3>
+      <button class="boton-mapaBase activo" onclick="mapaBaseElej('osm')">OpenStreetMap</button>
+      <button class="boton-mapaBase" onclick="mapaBaseElej('esri')">Esri World Imagery</button>
+      <button class="boton-mapaBase" onclick="mapaBaseElej('google')">Google Satellite</button>
+    </div>
+
+  </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
@@ -61,7 +69,7 @@
       attribution: 'Tiles © Google Maps'
     });                     
      
-    var sentinel_2 = L.tileLayer.wms('https://tiles.maps.eox.at/wm', {
+   /* var sentinel_2 = L.tileLayer.wms('https://tiles.maps.eox.at/wm', {
       //pane: 'pane_Sentinel2cloudlesslayerfor2024byEOX4326_0',
       layer: 's2cloudless-2024',
       tilematrixSet: 's2cloudless-2024-wmsc-17',
@@ -72,7 +80,7 @@
       continuousWorld : true,
       opacity: 1.0,            
       attribution: '&copy; <a href="https://eox.at/">EOX</a> - Sentinel-2 Cloudless'
-    });
+    });*/
 
     var map = L.map('map', {
       center: [19.320016, -99.147931], // CDMX
@@ -80,15 +88,31 @@
       layers: [osm] // Capa base inicial
     });
 
-    var baseMaps = {
+    /*var baseMaps = {
       "OpenStreetMap": osm,
       "Esri World Imagery": esri,
-      "Google Satellite": google,
-      "Sentinel-2 cloudless": sentinel_2
+      "Google Satellite": google
+    //  "Sentinel-2 cloudless": sentinel_2
     };
 
-    L.control.layers(baseMaps).addTo(map);
+  L.control.layers(baseMaps).addTo(map); */
 
+    var baseMaps = {
+      "osm": osm,
+      "esri": esri,
+      "google": google
+      };
+
+    function mapaBaseElej(nombre) {
+      // Remueve todas las capas base
+      Object.values(baseMaps).forEach(function(capa) {
+        map.removeLayer(capa);
+      });
+      // Agrega la seleccionada
+      map.addLayer(baseMaps[nombre ]);
+    }
+
+  
     var geojsonLayer = null;
 
       function onEachFeature(feature, layer) {
@@ -129,6 +153,15 @@
 
   document.getElementById('mostrar-geojson').addEventListener('click', cargarGeoJSON);
 
+
+  document.querySelectorAll('.boton-mapaBase').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.boton-mapaBase').forEach(function(b) {
+            b.classList.remove('activo');
+        });
+        btn.classList.add('activo');
+    });
+});
   </script>
 </body>
 </html>

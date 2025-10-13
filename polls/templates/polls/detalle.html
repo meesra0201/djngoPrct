@@ -14,7 +14,7 @@
     <div>
         <div class="header">
             <i class="fa-solid fa-pencil fa-5x" style="padding: 15px;"></i>
-            <legend><h1>{{ question.question_text }}</h1></legend>
+            <legend><h1>{{ pregunta.texto_pregunta }}</h1></legend>
             <i class="fa-solid fa-clipboard-question fa-5x" style="padding: 15px;"></i>
             
         </div>
@@ -25,18 +25,19 @@
         </div>
     </div>           
 
-    <form action="{% url 'polls:votar' question.id %}" method="post">
+    <form action="{% url 'polls:votar' pregunta.id %}" method="post">
         {% csrf_token %}
-        <fieldset>
+        <fieldset class="encuestas">
 
     
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-            {% for choice in question.choice_set.all %}
-                <label>
-                    <input type="radio" name="choice" value="{{ choice.id }}">
-                    {{ choice.choice_text }}
-                </label><br>            
-            {% endfor %}
+                {% for opcion in pregunta.opcion_set.all %}
+                    <label>
+                        <input type="radio" name="opcion" value="{{ opcion.id }}">
+                        <span style="font-weight: bold; font-size:1.5em;color: #509264;">{{ opcion.texto_opcion }}</span>
+                    </label>
+                    <br>
+                {% endfor %}
         </fieldset>
         <input  class="headbttns boton-link" type="submit" value="Vota">
     </form>

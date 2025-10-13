@@ -18,14 +18,18 @@
             <a href="{% url 'polls:inicio' %}" class="boton-link">Inicio</a>
             <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
         </div>
-    </div>    
+    </div>  
+    
+{% if mensaje_error %}
+  <div class="error" style="color: red; margin: 10px 0;">{{ mensaje_error }}</div>
+{% endif %}    
 
 <form method="post">
     {% csrf_token %}
     <fieldset>
         <legend>Pregunta</legend>
-        {{ formulario.question_text.errors }}
-        {{ formulario.question_text.label_tag }} {{ formulario.question_text }}
+        {{ formulario.texto_pregunta.errors}}
+        {{ formulario.texto_pregunta.label_tag}} {{ formulario.texto_pregunta}}
     </fieldset>
     <fieldset>
         <legend>Opciones</legend>
@@ -34,8 +38,9 @@
         {% for choice_form in formularios %}
             <tr>
                 <td>
-                    {{ choice_form.choice_text.errors }}
-                    {{ choice_form.choice_text.label_tag }} {{ choice_form.choice_text }}
+                    {{ choice_form.id }}
+                    {{ choice_form.texto_opcion.errors }}
+                    {{ choice_form.texto_opcion.label_tag }} {{ choice_form.texto_opcion }}
                 </td>
                 <td>
                     {% if formularios.can_delete %}

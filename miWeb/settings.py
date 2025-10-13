@@ -111,7 +111,7 @@ else:
         }
     }
 
-print(DATABASES)
+#print(DATABASES)
 
 
 # Password validation

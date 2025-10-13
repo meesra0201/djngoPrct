@@ -29,22 +29,22 @@
   <div class="content">
     <h1 class="subtitle"> Da clic sobre alguna pregunta para votar.</h1>
 
-    {% if latest_question_list %}
+    {% if lista_ultimas_preguntas %}
     <ul class="encuestas">
       <h3>Encuestas agregadas:</h3>
-      {% for question in latest_question_list %}
+      {% for pregunta in lista_ultimas_preguntas %}
       <li>
-        <h2 ><a href="{% url 'polls:detalle' question.id %}">{{ question.question_text }}</a></h2>
+        <h2 ><a href="{% url 'polls:detalle' pregunta.id %}">{{ pregunta.texto_pregunta }}</a></h2>
         
-        <a href="{% url 'polls:resultados' question.id %}" class="boton-link">Ver resultados</a>
+        <a href="{% url 'polls:resultados' pregunta.id %}" class="boton-link">Ver resultados</a>
 
-        <a href="{% url 'polls:editar_pregunta' question.pk %}" class="boton-link">Editar</a>
+        <a href="{% url 'polls:editar_pregunta' pregunta.pk %}" class="boton-link">Editar</a>
 
       </li>
       {% endfor %}
     </ul>
     {% else %}
-    <p>No polls are available.</p>
+    <p>No hay encuestas disponibles.</p>
     {% endif %}
   </div>
   

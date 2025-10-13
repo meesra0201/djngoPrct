@@ -37,9 +37,26 @@ padding: 10px;
     padding: 5px;
     margin: 5px;
 }
+
 .boton-link:hover {
     background: #ffcc3f;
 }
+.boton-mapaBase {
+    background: #775f2a;
+    color: #fff !important;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+    padding: 5px;
+    margin: 5px;
+}
+
+.boton-mapaBase.activo{
+    background: #ffcc3f;
+}
+
+
 
 .encuestas li {
     display: flex;
@@ -54,6 +71,29 @@ padding: 10px;
 
 .subtitle{
   color: rgb(99, 143, 101);
-  padding:20px;
+}
+
+#controlCapas {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  z-index: 1000;
+  /* background: white; */
+  border-radius: 8px;
+  padding: 5px; 
+  text-align: center;
+  min-width: 180px;  
+}
+
+#controlCapas h3 {
+  font-weight: bold;
+  color: rgb(99, 143, 101);
+  margin: 5px;
+  text-align: center; 
+  text-shadow:
+    -1px -1px 0 #fff,
+    1px -1px 0 #fff,
+    -1px  1px 0 #fff,
+    1px  1px 0 #fff;
 }
     

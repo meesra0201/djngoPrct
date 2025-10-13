@@ -1,27 +1,27 @@
 
 
 from django import forms
-from .models import Question, Choice
+from .models import Pregunta, Opcion
 from django.forms.models import inlineformset_factory
 
-class QuestionForm(forms.ModelForm):
-    question_text = forms.CharField(
+class CreaPregunta(forms.ModelForm):
+    texto_pregunta = forms.CharField(
         label="Agrega una nueva encuesta",
         widget=forms.TextInput(attrs={'placeholder': 'Escribe la pregunta aquí'})
     )
     
     class Meta:
-        model = Question
-        fields = ['question_text']
+        model = Pregunta
+        fields = ['texto_pregunta']
 
-ChoiceFormSet = inlineformset_factory(
-    Question,
-    Choice,
-    fields=['choice_text'],
+ConjuntoOpciones = inlineformset_factory(
+    Pregunta,
+    Opcion,
+    fields=['texto_opcion'],
     extra=3,
     can_delete=True,
     widgets={
-        'choice_text': forms.TextInput(attrs={'placeholder': 'Opción de respuesta'})
+        'texto_opcion': forms.TextInput(attrs={'placeholder': 'Opción de respuesta'})
     },
-    labels={'choice_text': 'Opción'}
+    labels={'texto_opcion': 'Opción'}
 )
