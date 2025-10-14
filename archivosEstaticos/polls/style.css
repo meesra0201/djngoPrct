@@ -1,0 +1,99 @@
+    li {
+    color: #509264;
+}   
+   
+   li a {
+    color: #509264;
+}
+
+.header {
+    background: rgb(99, 143, 101);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color:  rgb(255, 255, 255);
+}
+
+.headbttns {
+justify-content: center;
+padding: 10px;
+
+}
+
+.encuestas{
+    background: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 0, 0);
+    padding: 10px;
+    margin: 10px;
+}
+
+.boton-link {
+    background: #775f2a;
+    color: #fff !important;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+    padding: 5px;
+    margin: 5px;
+}
+
+.boton-link:hover {
+    background: #ffcc3f;
+}
+.boton-mapaBase {
+    background: #775f2a;
+    color: #fff !important;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+    padding: 5px;
+    margin: 5px;
+}
+
+.boton-mapaBase.activo{
+    background: #ffcc3f;
+}
+
+
+
+.encuestas li {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-bottom: 5px;
+}
+
+.encuestas li h4 {
+    margin: 0;
+}
+
+.subtitle{
+  color: rgb(99, 143, 101);
+}
+
+#controlCapas {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  z-index: 1000;
+  /* background: white; */
+  border-radius: 8px;
+  padding: 5px; 
+  text-align: center;
+  min-width: 180px;  
+}
+
+#controlCapas h3 {
+  font-weight: bold;
+  color: rgb(99, 143, 101);
+  margin: 5px;
+  text-align: center; 
+  text-shadow:
+    -1px -1px 0 #fff,
+    1px -1px 0 #fff,
+    -1px  1px 0 #fff,
+    1px  1px 0 #fff;
+}
+    
