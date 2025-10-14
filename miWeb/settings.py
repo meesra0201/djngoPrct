@@ -20,10 +20,16 @@ env.read_env(".env")  # read .env file, if it exists
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
+#ENVIRONMENT = os.environ.get('ENVIRONMENT')
+ENVIRONMENT = "production"
 
-DEBUG = os.environ.get('DEBUG')
+# SECURITY WARNING: don't run with debug turned on in production!
+if ENVIRONMENT == 'development':
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
 
 
 # Application definition
@@ -36,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'miWeb.urls'

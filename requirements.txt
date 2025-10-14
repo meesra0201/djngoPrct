@@ -1,6 +1,11 @@
 asgiref==3.9.1
+certifi==2025.10.5
+charset-normalizer==3.4.3
+cloudinary==1.44.1
 Django==5.2.4
+django-cloudinary-storage==0.3.0
 environs==14.3.0
+idna==3.11
 iniconfig==2.1.0
 marshmallow==4.0.1
 packaging==25.0
@@ -10,4 +15,8 @@ Pygments==2.19.2
 pytest==8.4.2
 pytest-django==4.11.1
 python-dotenv==1.1.1
+requests==2.32.5
+six==1.17.0
 sqlparse==0.5.3
+urllib3==2.5.0
+whitenoise==6.11.0
