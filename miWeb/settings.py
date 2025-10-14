@@ -29,9 +29,9 @@ if ENVIRONMENT == 'development':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'djngoprct.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'encuestascortas.onrender.com']
 
-CSRF_TRUSTED_ORIGINS = ['https://djngoprct.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://encuestascortas.onrender.com']
 
 
 # Application definition
@@ -178,7 +178,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-STATIC_ROOT = BASE_DIR / "archivosEstaticos"
+STATIC_ROOT = os.environ.get("STATIC_ROOT", os.path.join(BASE_DIR, "static_root"))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
