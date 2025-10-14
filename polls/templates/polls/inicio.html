@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <title>Encuestas</title>
+  
+  {% load static %}  
+  <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+</head>
+<body>
+  <div>
+    <div class="header">
+      <i class="fa-solid fa-circle-question fa-5x" style="margin: 15px;"></i>
+      <h1>Bienvenido al sitio de encuestas</h1>
+      <i class="fa-solid fa-circle-question fa-5x" style="margin: 15px;"></i>
+
+    </div>
+    
+    <div class="header headbttns">
+      <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
+      <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
+    </div>
+    
+  </div>
+  
+  <div class="content">
+    <h1 class="subtitle"> Da clic sobre alguna pregunta para votar.</h1>
+
+    {% if lista_ultimas_preguntas %}
+    <ul class="encuestas">
+      <h3>Encuestas agregadas:</h3>
+      {% for pregunta in lista_ultimas_preguntas %}
+      <li>
+        <h2 ><a href="{% url 'polls:detalle' pregunta.id %}">{{ pregunta.texto_pregunta }}</a></h2>
+        
+        <a href="{% url 'polls:resultados' pregunta.id %}" class="boton-link">Ver resultados</a>
+
+        <a href="{% url 'polls:editar_pregunta' pregunta.pk %}" class="boton-link">Editar</a>
+
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No hay encuestas disponibles.</p>
+    {% endif %}
+  </div>
+  
+</body>
+</html>

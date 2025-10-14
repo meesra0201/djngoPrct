@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <title>Mapa</title>
+  {% load static %}
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    #map {
+      position: absolute;
+      top: 175px; /* Ajusta según la altura de tu header */
+      left: 0;
+      width: 100vw;
+      height: calc(100vh - 120px); /* Ajusta según la altura de tu header */
+    }
+  </style>
+</head>
+<body>
+    <div >
+        <div class="header">
+          <i class="fa-solid fa-map-location-dot fa-5x" style="padding: 15px;"></i>
+          <h1>Mapa</h1>
+          <i class="fa-solid fa-earth-americas fa-5x" style="padding: 15px;"></i>
+        </div>
+        
+        <div class="links header headbttns">
+            <a href="{% url 'polls:inicio' %}" class="boton-link">Inicio</a>
+            <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
+            <button id="mostrar-geojson"  class="boton-link">Alcaldias CDMX</button>
+
+        </div> 
+    </div>
+  
+  <div id="map">
+    <div id="controlCapas">
+      <h3>Mapas Base </h3>
+      <button class="boton-mapaBase activo" onclick="mapaBaseElej('osm')">OpenStreetMap</button>
+      <button class="boton-mapaBase" onclick="mapaBaseElej('esri')">Esri World Imagery</button>
+      <button class="boton-mapaBase" onclick="mapaBaseElej('google')">Google Satellite</button>
+    </div>
+
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    });
+
+    var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles © Esri World Imagery'
+    });
+
+    var google = L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
+      attribution: 'Tiles © Google Maps'
+    });                     
+     
+   /* var sentinel_2 = L.tileLayer.wms('https://tiles.maps.eox.at/wm', {
+      //pane: 'pane_Sentinel2cloudlesslayerfor2024byEOX4326_0',
+      layer: 's2cloudless-2024',
+      tilematrixSet: 's2cloudless-2024-wmsc-17',
+      format: 'image/jpeg',
+      style: '',
+      uppercase: true,
+      transparent: true,
+      continuousWorld : true,
+      opacity: 1.0,            
+      attribution: '&copy; <a href="https://eox.at/">EOX</a> - Sentinel-2 Cloudless'
+    });*/
+
+    var map = L.map('map', {
+      center: [19.320016, -99.147931], // CDMX
+      zoom: 11,
+      layers: [osm] // Capa base inicial
+    });
+
+    /*var baseMaps = {
+      "OpenStreetMap": osm,
+      "Esri World Imagery": esri,
+      "Google Satellite": google
+    //  "Sentinel-2 cloudless": sentinel_2
+    };
+
+  L.control.layers(baseMaps).addTo(map); */
+
+    var baseMaps = {
+      "osm": osm,
+      "esri": esri,
+      "google": google
+      };
+
+    function mapaBaseElej(nombre) {
+      // Remueve todas las capas base
+      Object.values(baseMaps).forEach(function(capa) {
+        map.removeLayer(capa);
+      });
+      // Agrega la seleccionada
+      map.addLayer(baseMaps[nombre ]);
+    }
+
+  
+    var geojsonLayer = null;
+
+      function onEachFeature(feature, layer) {
+    // Mostrar un atributo en un tooltip al hacer hover
+    if (feature.properties && feature.properties.NOMGEO) {
+      layer.bindTooltip(feature.properties.NOMGEO, {sticky: true});
+    }
+
+    // Mostrar todos los atributos en un popup al hacer clic
+    layer.on('click', function(e) {
+      let props = feature.properties;
+      let content = '<b>Atributos:</b><ul>';
+      for (let key in props) {
+        content += `<li><b>${key}:</b> ${props[key]}</li>`;
+      }
+      content += '</ul>';
+      layer.bindPopup(content).openPopup();
+    });
+  }
+
+  function cargarGeoJSON() {
+    // Evitar cargar dos veces
+    if (geojsonLayer) {
+      map.removeLayer(geojsonLayer);
+      geojsonLayer = null;
+      return;
+    }
+ 
+      // Cargar GeoJSON desde static
+    fetch("{% static 'polls/spatial/munis09_geo.geojson' %}")
+        .then(response => response.json())
+        .then(data => {
+        geojsonLayer = L.geoJSON(data, {
+            onEachFeature: onEachFeature
+        }).addTo(map);
+        });
+  }
+
+  document.getElementById('mostrar-geojson').addEventListener('click', cargarGeoJSON);
+
+
+  document.querySelectorAll('.boton-mapaBase').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.boton-mapaBase').forEach(function(b) {
+            b.classList.remove('activo');
+        });
+        btn.classList.add('activo');
+    });
+});
+  </script>
+</body>
+</html>

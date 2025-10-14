@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8" />
+    <title>Resultados</title>
+
+    {% load static %}  
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+<body>
+    <div >
+        <div class="header">
+            <i class="fa-solid fa-square-poll-vertical fa-5x" style="padding: 15px;"></i>
+            <h1>{{ pregunta.texto_pregunta }}</h1>
+            <i class="fa-solid fa-magnifying-glass fa-5x" style="padding: 15px;"></i>
+        </div>
+        
+        <div class="links header headbttns">
+            <a href="{% url 'polls:inicio' %}" class="boton-link">Inicio</a>
+            <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
+            <a href="{% url 'polls:mapa_leaflet' %}" class="boton-link">Mapa</a>
+        </div>
+    </div>
+  
+    
+    <ul class="encuestas">
+        {% for opcion in pregunta.opcion_set.all %}
+        <h2><li>{{ opcion.texto_opcion }}:   {{ opcion.votos }} voto{{ opcion.votos|pluralize }}</li></h2>
+        {% endfor %}
+    </ul>
+    
+    <a class="headbttns boton-link"  href="{% url 'polls:detalle' pregunta.id %}">Vota otra vez?</a>
+</body>
+</html>
