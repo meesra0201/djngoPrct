@@ -41,6 +41,7 @@
             <a href="{% url 'polls:inicio' %}" class="boton-link">Inicio</a>
             <a href="{% url 'polls:agregar_pregunta' %}" class="boton-link">Agregar nueva pregunta</a>
             <button id="mostrar-geojson"  class="boton-link">Alcaldias CDMX</button>
+            <button id="mostrar-ents"  class="boton-link">Hospitales</button>
 
         </div> 
     </div>
@@ -114,24 +115,65 @@
 
   
     var geojsonLayer = null;
+   // var EntsgeojsonLayer = null;
+    var entidadesLayer = null;
+    var hospitalesLayer = null;
+    var todosHospitales = null; // se carga una sola vez
 
-      function onEachFeature(feature, layer) {
-    // Mostrar un atributo en un tooltip al hacer hover
-    if (feature.properties && feature.properties.NOMGEO) {
-      layer.bindTooltip(feature.properties.NOMGEO, {sticky: true});
-    }
+  // Mostrar un atributo en un tooltip al hacer hover
+    function onEachFeature(feature, layer) {  
+      if (feature.properties && feature.properties.NOMGEO) {
+        layer.bindTooltip(feature.properties.NOMGEO, {sticky: true});
+      }    
 
     // Mostrar todos los atributos en un popup al hacer clic
-    layer.on('click', function(e) {
-      let props = feature.properties;
-      let content = '<b>Atributos:</b><ul>';
-      for (let key in props) {
-        content += `<li><b>${key}:</b> ${props[key]}</li>`;
+      layer.on('click', function(e) {
+        let props = feature.properties;
+        let content = '<b>Atributos:</b><ul>';
+        for (let key in props) {
+          content += `<li><b>${key}:</b> ${props[key]}</li>`;
+        }
+        content += '</ul>';
+        layer.bindPopup(content).openPopup();
+      });
+    }
+
+
+      // Mostrar un atributo en un tooltip al hacer hover
+    function onEachFeatureEntidad(feature, layer) {
+      if (feature.properties && feature.properties.NOMBRE) {
+        layer.bindTooltip(feature.properties.NOMBRE, {sticky: true});
+        
       }
-      content += '</ul>';
-      layer.bindPopup(content).openPopup();
-    });
-  }
+
+      layer.on("mouseover", function (e) {
+        e.target.setStyle({
+        color: "#ffcc3f",
+        weight: 3,
+        fillColor: "#ffcc3f",
+        fillOpacity: 0.4
+        });
+      });
+
+  // Evento al salir del mouse: restaura el estilo original
+      layer.on("mouseout", function (e) {
+        entidadesLayer.resetStyle(e.target);
+      });
+    
+      // Cuando se hace clic en una entidad
+      layer.on('click', function(e) {
+        let props = feature.properties;
+        let claveEntidad = props.ENTIDAD; // ajusta según el atributo real
+
+        // Mostrar popup con atributos
+        let content = `<b>${props.NOMBRE}</b><br><small>CVE_ENT: ${claveEntidad}</small>`;
+        layer.bindPopup(content).openPopup();
+
+        // Filtrar hospitales
+        mostrarHospitalesPorEntidad(claveEntidad);
+      });
+    }
+    
 
   function cargarGeoJSON() {
     // Evitar cargar dos veces
@@ -145,14 +187,126 @@
     fetch("{% static 'polls/spatial/munis09_geo.geojson' %}")
         .then(response => response.json())
         .then(data => {
-        geojsonLayer = L.geoJSON(data, {
-            onEachFeature: onEachFeature
-        }).addTo(map);
-        });
+          geojsonLayer = L.geoJSON(data, {
+              onEachFeature: onEachFeature
+          }).addTo(map);
+                
+          const bounds = geojsonLayer.getBounds();
+          if (bounds.isValid()) {
+            map.fitBounds(bounds);
+          } else {
+            alert("No hay entidades registradas.");
+          }
+        })
+        .catch(error => {
+          console.error("Error al cargar las entidades:", error);
+          alert("No se pudieron cargar las entidades.");
+        }); 
+                //Ajustar el zoom automáticamente a los límites de las alcaldias
+
   }
 
   document.getElementById('mostrar-geojson').addEventListener('click', cargarGeoJSON);
 
+
+  function cargarEntidades() {
+    // Si las capas ya están activas, las limpiamos y regresamos a vista general
+    if (entidadesLayer || hospitalesLayer) {
+      if (entidadesLayer) {
+        map.removeLayer(entidadesLayer);
+        entidadesLayer = null;
+      }
+      if (hospitalesLayer) {
+        map.removeLayer(hospitalesLayer);
+        hospitalesLayer = null;
+      }
+
+      // Regresar a una vista general de México se pueden ajustar coordenadas y zoom)
+      map.setView([23.6345, -102.5528], 6);
+      return;
+    }
+
+    // Cargar las entidades desde el archivo GeoJSON
+    fetch("{% static 'polls/spatial/Entidades.geojson' %}")
+      .then(response => response.json())
+      .then(data => {
+        entidadesLayer = L.geoJSON(data, {
+          onEachFeature: onEachFeatureEntidad,
+          style: { color: "#007bff", weight: 1, fillOpacity: 0.2 }
+        }).addTo(map);
+
+        // Ajustar el zoom automáticamente a los límites de las entidades
+        const bounds = entidadesLayer.getBounds();
+        if (bounds.isValid()) {
+          map.fitBounds(bounds);
+        } else {
+          alert("No hay entidades registradas.");
+        }
+      })
+      .catch(error => {
+        console.error("Error al cargar las entidades:", error);
+        alert("No se pudieron cargar las entidades.");
+      });
+  }
+
+  document.getElementById('mostrar-ents').addEventListener('click', cargarEntidades);
+
+    // Función para cargar todos los hospitales una sola vez
+    function cargarHospitales() {
+      return fetch("{% static 'polls/spatial/HospitalesEnt.geojson' %}")
+        .then(response => response.json())
+        .then(data => {
+          todosHospitales = data; // Guardamos el GeoJSON completo en memoria
+        });
+    }
+
+    // Filtrar y mostrar hospitales de una entidad específica
+    function mostrarHospitalesPorEntidad(claveEntidad) {
+      if (!todosHospitales) {
+        console.error("Los hospitales aún no se han cargado.");
+        return;
+      }
+
+      // Eliminamos la capa anterior de hospitales si existe
+      if (hospitalesLayer) {
+        map.removeLayer(hospitalesLayer);
+      }
+
+      // Filtrar hospitales cuyo atributo de entidad coincida
+      let filtrados = {
+        type: "FeatureCollection",
+        features: todosHospitales.features.filter(f => f.properties.ENTIDAD == claveEntidad)
+      };
+
+      // Mostrar los puntos en el mapa
+      hospitalesLayer = L.geoJSON(filtrados, {
+        pointToLayer: function(feature, latlng) {
+          const hospitalIcon = L.divIcon({
+            html: '<i class="fa-solid fa-circle-h" style="color: red; font-size: 20px;"></i>',
+            className: 'custom-icon', // evita conflictos con estilos de Leaflet
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+          });
+          return L.marker(latlng, { icon: hospitalIcon });
+        },
+        onEachFeature: function(feature, layer) {
+          let props = feature.properties;
+          let content = `<b>${props.NOMBRE}</b><br>ENTREGAS REALIZADAS: ${props.CONTROL || ''}<br>ENTIDAD: ${props.ENTIDAD}`;
+          layer.bindPopup(content);
+        }
+      }).addTo(map);
+
+      // Ajustar el zoom para mostrar los hospitales de esa entidad
+      if (hospitalesLayer.getLayers().length > 0) {
+        map.fitBounds(hospitalesLayer.getBounds());
+      } else {
+        alert("No hay hospitales registrados en esta entidad.");
+      }
+    }
+
+    // Cargar hospitales al iniciar (solo una vez)
+    cargarHospitales();
+      
 
   document.querySelectorAll('.boton-mapaBase').forEach(function(btn) {
     btn.addEventListener('click', function() {
@@ -161,7 +315,7 @@
         });
         btn.classList.add('activo');
     });
-});
+  });
   </script>
 </body>
 </html>

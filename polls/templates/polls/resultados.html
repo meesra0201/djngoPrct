@@ -26,7 +26,7 @@
   
     
     <ul class="encuestas">
-        {% for opcion in pregunta.opcion_set.all %}
+        {% for opcion in pregunta.opciones.all %}
         <h2><li>{{ opcion.texto_opcion }}:   {{ opcion.votos }} voto{{ opcion.votos|pluralize }}</li></h2>
         {% endfor %}
     </ul>

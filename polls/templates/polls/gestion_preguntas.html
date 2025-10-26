@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {% load static %}  
+  <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <title>Gestión de Preguntas</title>
+  <style>
+
+  h1 {
+    text-align: center;
+  }
+
+  .pregunta-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  input[type="text"] {
+    display: block;
+    width: 30%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  .opcion {
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  .boton {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+  }
+
+  .boton:hover { background-color: #ffcc3f; }
+  .boton-rojo { background-color: #dc3545; }
+  .boton-rojo:hover { background-color: #ffcc3f; }
+  .boton-verde { background-color: #28a745; }
+  .boton-verde:hover { background-color: #ffcc3f; }
+
+  table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 30px auto;
+  }
+
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  table th {
+    background-color:  #509264;
+    color: white;
+  }
+  </style>
+</head>
+<body>
+    <div class="header">
+      <i class="fa-solid fa-circle-question fa-5x" style="margin: 15px;"></i>
+      <h1>Gestión de Preguntas y Opciones</h1>
+      <i class="fa-solid fa-circle-question fa-5x" style="margin: 15px;"></i>
+    </div>
+    <div class="links header headbttns">
+        <a href="{% url 'polls:inicio' %}" class="boton-link">Inicio</a>
+    </div> 
+
+
+  <div class="pregunta-box" style="margin-top: 15px;">
+    <label ><strong>Que te gustría saber:</strong></label>
+    <input type="text" id="preguntaTexto" placeholder="Escribe tu pregunta aquí">
+    
+  <label><strong>Agrega opciones de respuesta:</strong></label>
+    <div id="opcionesContainer">
+        <div class="opcion">
+            <input type="text" class="opcionTexto" placeholder="Opción 1">
+            <button class="boton boton-rojo eliminarOpcion">Eliminar</button>
+        </div>
+    </div>
+
+    <button id="agregarOpcion" class="boton boton-verde">Agregar opción</button>
+    <button id="guardarPregunta" class="boton">Guardar / Actualizar pregunta</button>
+  </div>
+
+  <h2>📋 Lista de preguntas</h2>
+  <table id="tablaPreguntas">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Pregunta</th>
+        <th>Opciones</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const API_URL = "/api/pregunta/";
+    const LIST_URL = "/api/preguntas/";
+    const DELETE_URL = "/api/pregunta/eliminar/";
+    let preguntaId = null;
+
+    async function cargarPreguntas() {
+      const res = await fetch(LIST_URL);
+      const data = await res.json();
+      const tbody = document.querySelector("#tablaPreguntas tbody");
+      tbody.innerHTML = "";
+      data.forEach((item) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.texto}</td>
+          <td>${item.opciones.map(o => o.texto).join(", ")}</td>
+          <td>
+            <button class="boton boton-verde" onclick="editarPregunta(${item.id})">Editar</button>
+            <button class="boton boton-rojo" onclick="eliminarPregunta(${item.id})">Eliminar</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    async function editarPregunta(id) {
+      const res = await fetch(`${LIST_URL}?id=${id}`);
+      const data = await res.json();
+      const pregunta = data[0];
+
+      preguntaId = pregunta.id;
+      document.getElementById("preguntaTexto").value = pregunta.texto;
+      const opcionesContainer = document.getElementById("opcionesContainer");
+      opcionesContainer.innerHTML = "";
+      pregunta.opciones.forEach((op) => {
+        const div = document.createElement("div");
+        div.classList.add("opcion");
+        div.innerHTML = `
+          <input type="text" class="opcionTexto" value="${op.texto}">
+          <button class="boton boton-rojo eliminarOpcion">Eliminar</button>
+        `;
+        opcionesContainer.appendChild(div);
+      });
+    }
+
+    async function eliminarPregunta(id) {
+      if (!confirm("¿Seguro que deseas eliminar esta pregunta?")) return;
+      await fetch(`${DELETE_URL}${id}/`, { method: "DELETE" });
+      cargarPreguntas();
+    }
+
+    document.getElementById("agregarOpcion").addEventListener("click", () => {
+      const contenedor = document.getElementById("opcionesContainer");
+      const nuevaOpcion = document.createElement("div");
+      nuevaOpcion.classList.add("opcion");
+      nuevaOpcion.innerHTML = `
+        <input type="text" class="opcionTexto" placeholder="Nueva opción">
+        <button class="boton boton-rojo eliminarOpcion">Eliminar</button>
+      `;
+      contenedor.appendChild(nuevaOpcion);
+    });
+
+    document.getElementById("opcionesContainer").addEventListener("click", (e) => {
+      if (e.target.classList.contains("eliminarOpcion")) {
+        e.target.parentElement.remove();
+      }
+    });
+
+    document.getElementById("guardarPregunta").addEventListener("click", async () => {
+    const textoPregunta = document.getElementById("preguntaTexto").value.trim();
+
+    // Validación del texto de la pregunta
+    if (!textoPregunta) {
+        alert("⚠️ Por favor, ingresa el texto de la pregunta.");
+        return;
+    }
+
+    // Obtener todas las opciones no vacías
+    const opciones = Array.from(document.querySelectorAll(".opcionTexto"))
+        .map((input) => ({ texto: input.value.trim() }))
+        .filter((op) => op.texto.length > 0);
+
+    // ✅ Validación: al menos 2 opciones con texto
+    if (opciones.length < 2) {
+        alert("⚠️ Debes ingresar al menos dos opciones de respuesta.");
+        return;
+    }
+
+    const metodo = preguntaId ? "PUT" : "POST";
+    const payload = preguntaId
+        ? { id: preguntaId, pregunta: textoPregunta, opciones }
+        : { pregunta: textoPregunta, opciones };
+
+    try {
+        const response = await fetch(API_URL, {
+        method: metodo,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+        alert("✅ " + result.mensaje);
+        preguntaId = null;
+        document.getElementById("preguntaTexto").value = "";
+        document.getElementById("opcionesContainer").innerHTML = `
+            <div class="opcion">
+            <input type="text" class="opcionTexto" placeholder="Opción 1">
+            <button class="boton boton-rojo eliminarOpcion">Eliminar</button>
+            </div>
+        `;
+        cargarPreguntas();
+        } else {
+        alert("❌ Error: " + (result.error || "No se pudo guardar la pregunta."));
+        }
+    } catch (error) {
+        console.error("Error al guardar la pregunta:", error);
+        alert("❌ Error inesperado. Revisa la consola para más detalles.");
+    }
+
+        });
+
+    cargarPreguntas();
+  </script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+[
+{
+    "model": "polls.pregunta",
+    "pk": 1,
+    "fields": {
+        "texto_pregunta": "¿Cuál es tu comida preferida?",
+        "fecha_publicacion": "2025-10-09T19:03:04.691Z"
+    }
+},
+{
+    "model": "polls.pregunta",
+    "pk": 2,
+    "fields": {
+        "texto_pregunta": "¿Que medio de transporte prefieres?",
+        "fecha_publicacion": "2025-10-09T21:29:34.325Z"
+    }
+},
+{
+    "model": "polls.pregunta",
+    "pk": 3,
+    "fields": {
+        "texto_pregunta": "como estas?",
+        "fecha_publicacion": "2025-10-10T18:07:32.750Z"
+    }
+},
+{
+    "model": "polls.pregunta",
+    "pk": 4,
+    "fields": {
+        "texto_pregunta": "¿Qué estación del año te gusta más?",
+        "fecha_publicacion": "2025-10-13T16:55:38.713Z"
+    }
+},
+{
+    "model": "polls.pregunta",
+    "pk": 5,
+    "fields": {
+        "texto_pregunta": "¿Que comida prefieres?",
+        "fecha_publicacion": "2025-10-14T20:41:26.856Z"
+    }
+},
+{
+    "model": "polls.pregunta",
+    "pk": 6,
+    "fields": {
+        "texto_pregunta": "¿Que pasatiempo te gusta más?",
+        "fecha_publicacion": "2025-10-14T20:43:21.422Z"
+    }
+},
+{
+    "model": "polls.pregunta",
+    "pk": 7,
+    "fields": {
+        "texto_pregunta": "¿En donde prefieres vacacionar?",
+        "fecha_publicacion": "2025-10-14T20:45:00.402Z"
+    }
+},
+{
+    "model": "polls.pregunta",
+    "pk": 8,
+    "fields": {
+        "texto_pregunta": "¿Cuál es tu bebida favorita?",
+        "fecha_publicacion": "2025-10-14T20:46:10.647Z"
+    }
+},
+{
+    "model": "polls.pregunta",
+    "pk": 9,
+    "fields": {
+        "texto_pregunta": "¿Que genero de música te gusta más?",
+        "fecha_publicacion": "2025-10-14T20:47:37.375Z"
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 1,
+    "fields": {
+        "pregunta": 1,
+        "texto_opcion": "Pizza",
+        "votos": 2
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 2,
+    "fields": {
+        "pregunta": 1,
+        "texto_opcion": "Tacos",
+        "votos": 6
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 3,
+    "fields": {
+        "pregunta": 1,
+        "texto_opcion": "Vegetariana",
+        "votos": 0
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 4,
+    "fields": {
+        "pregunta": 2,
+        "texto_opcion": "Avion",
+        "votos": 0
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 5,
+    "fields": {
+        "pregunta": 2,
+        "texto_opcion": "Trokona",
+        "votos": 4
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 6,
+    "fields": {
+        "pregunta": 2,
+        "texto_opcion": "Crucero por el mundo",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 8,
+    "fields": {
+        "pregunta": 1,
+        "texto_opcion": "China",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 9,
+    "fields": {
+        "pregunta": 2,
+        "texto_opcion": "caballo",
+        "votos": 0
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 10,
+    "fields": {
+        "pregunta": 3,
+        "texto_opcion": "bien",
+        "votos": 2
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 11,
+    "fields": {
+        "pregunta": 3,
+        "texto_opcion": "enojado",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 12,
+    "fields": {
+        "pregunta": 3,
+        "texto_opcion": "triste",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 13,
+    "fields": {
+        "pregunta": 4,
+        "texto_opcion": "Invierno",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 14,
+    "fields": {
+        "pregunta": 4,
+        "texto_opcion": "Primavera",
+        "votos": 0
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 15,
+    "fields": {
+        "pregunta": 4,
+        "texto_opcion": "Verano",
+        "votos": 2
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 16,
+    "fields": {
+        "pregunta": 4,
+        "texto_opcion": "Otoño",
+        "votos": 0
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 17,
+    "fields": {
+        "pregunta": 5,
+        "texto_opcion": "Mexicana",
+        "votos": 3
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 18,
+    "fields": {
+        "pregunta": 5,
+        "texto_opcion": "China",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 19,
+    "fields": {
+        "pregunta": 5,
+        "texto_opcion": "Italiana",
+        "votos": 2
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 20,
+    "fields": {
+        "pregunta": 6,
+        "texto_opcion": "Ver TV",
+        "votos": 3
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 21,
+    "fields": {
+        "pregunta": 6,
+        "texto_opcion": "Escuchar música",
+        "votos": 2
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 22,
+    "fields": {
+        "pregunta": 6,
+        "texto_opcion": "Leer",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 23,
+    "fields": {
+        "pregunta": 6,
+        "texto_opcion": "Hacer ejercicio",
+        "votos": 2
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 24,
+    "fields": {
+        "pregunta": 7,
+        "texto_opcion": "Playa",
+        "votos": 4
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 25,
+    "fields": {
+        "pregunta": 7,
+        "texto_opcion": "Montañas",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 26,
+    "fields": {
+        "pregunta": 7,
+        "texto_opcion": "Cuidades",
+        "votos": 2
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 27,
+    "fields": {
+        "pregunta": 8,
+        "texto_opcion": "Refresco",
+        "votos": 3
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 28,
+    "fields": {
+        "pregunta": 8,
+        "texto_opcion": "Agua de sabor",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 29,
+    "fields": {
+        "pregunta": 8,
+        "texto_opcion": "Cerveza",
+        "votos": 4
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 30,
+    "fields": {
+        "pregunta": 9,
+        "texto_opcion": "Rock",
+        "votos": 4
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 31,
+    "fields": {
+        "pregunta": 9,
+        "texto_opcion": "Raeggeton",
+        "votos": 4
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 32,
+    "fields": {
+        "pregunta": 9,
+        "texto_opcion": "Regional",
+        "votos": 3
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 33,
+    "fields": {
+        "pregunta": 9,
+        "texto_opcion": "Clásica",
+        "votos": 1
+    }
+},
+{
+    "model": "polls.opcion",
+    "pk": 34,
+    "fields": {
+        "pregunta": 9,
+        "texto_opcion": "Alternativa",
+        "votos": 2
+    }
+}
+]

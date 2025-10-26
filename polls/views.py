@@ -1,13 +1,15 @@
 
 from django.db.models import F
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from .forms import CreaPregunta, ConjuntoOpciones
-
 from .models import Pregunta, Opcion
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+import json
 
 
 class IndexView(generic.ListView):
@@ -43,7 +45,7 @@ class ResultsView(generic.DetailView):
 def votar(request, question_id):
     pregunta = get_object_or_404(Pregunta, pk=question_id)
     try:
-        opcion_elegida = pregunta.opcion_set.get(pk=request.POST["opcion"])
+        opcion_elegida = pregunta.opciones.get(pk=request.POST["opcion"])
     except (KeyError, Opcion.DoesNotExist):
         # Redisplay the question voting form.
         return render(
@@ -123,3 +125,88 @@ def agregar_o_editar_pregunta(request, pk=None):
 
 def mapa_leaflet(request):
     return render(request, 'polls/mapa_leaflet.html')
+
+
+def gestion_preguntas(request):
+    return render(request, 'polls/gestion_preguntas.html')
+
+
+@csrf_exempt
+@require_http_methods(["POST", "PUT"])
+def guardar_o_actualizar_pregunta(request):
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+        pregunta_id = data.get("id")
+        texto_pregunta = data.get("pregunta") or data.get("texto_pregunta")
+        opciones = data.get("opciones", [])
+
+        if not texto_pregunta:
+            return JsonResponse({"error": "El texto de la pregunta es obligatorio"}, status=400)
+
+        # ✅ Crear o actualizar la pregunta
+        if pregunta_id:
+            pregunta = Pregunta.objects.get(pk=pregunta_id)
+            pregunta.texto_pregunta = texto_pregunta
+            pregunta.save()
+        else:
+            pregunta = Pregunta.objects.create(texto_pregunta=texto_pregunta)
+
+        # ✅ Actualizar o crear opciones
+        ids_enviados = []
+        for opcion in opciones:
+            opcion_id = opcion.get("id")
+            texto_op = opcion.get("texto") or opcion.get("texto_opcion", "")
+            texto_op = texto_op.strip()
+
+            if not texto_op:
+                continue
+
+            if opcion_id:
+                # Actualiza opción existente
+                op = Opcion.objects.get(pk=opcion_id)
+                op.texto_opcion = texto_op
+                op.save()
+                ids_enviados.append(op.id)
+            else:
+                # Crea nueva opción
+                nueva_op = Opcion.objects.create(pregunta=pregunta, texto_opcion=texto_op)
+                ids_enviados.append(nueva_op.id)
+
+        # ✅ Eliminar opciones no incluidas
+        Opcion.objects.filter(pregunta=pregunta).exclude(id__in=ids_enviados).delete()
+
+        return JsonResponse({
+            "mensaje": "Pregunta y opciones guardadas correctamente",
+            "pregunta_id": pregunta.id
+        })
+
+    except Pregunta.DoesNotExist:
+        return JsonResponse({"error": "La pregunta no existe"}, status=404)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Formato JSON inválido"}, status=400)
+    except Exception as e:
+        print("Error interno:", e)
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+
+
+def listar_preguntas(request):
+    preguntas = Pregunta.objects.all().order_by("-fecha_publicacion")
+    data = [
+        {
+            "id": p.id,
+            "texto": p.texto_pregunta,
+            "opciones": [{"id": o.id, "texto": o.texto_opcion} for o in p.opciones.all()]
+        } for p in preguntas
+    ]
+    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def eliminar_pregunta(request, id):
+    if request.method == "DELETE":
+        try:
+            Pregunta.objects.get(id=id).delete()
+            return JsonResponse({"mensaje": "Pregunta eliminada"})
+        except Pregunta.DoesNotExist:
+            return JsonResponse({"error": "Pregunta no encontrada"}, status=404)

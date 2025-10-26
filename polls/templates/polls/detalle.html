@@ -31,7 +31,7 @@
 
     
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-                {% for opcion in pregunta.opcion_set.all %}
+                {% for opcion in pregunta.opciones.all %}
                     <label>
                         <input type="radio" name="opcion" value="{{ opcion.id }}">
                         <span style="font-weight: bold; font-size:1.5em;color: #509264;">{{ opcion.texto_opcion }}</span>
